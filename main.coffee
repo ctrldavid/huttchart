@@ -12,36 +12,16 @@ define [
     events: 
       'click .js-new': -> @loadView 'new'
 
-    render: ->
-      #@messageView = new MessageView
-      #@waitOn @append '.js-messages', @messageView
-
-    appeared: ->
-      #window.setInterval =>
-      #  @append '.js-messages', new MessageView
-      #, 1000
+    init: ->
+      @currentView = null
 
     loadView: (view) ->
+      @currentView.unload() if @currentView?
       switch view
         when 'new'
           @currentView = new NewPlanChangeView
-          @append '.js-content', @currentView
-
-
-  class MessageView extends View
-    template: (locals) ->
-      "<pre style='margin:0px 8px;float:left;'>"+locals.message+"</pre>"
-
-    init: ->
-      @messages = [
-        "Pants for everyone"
-        "Yay pants"
-        "Wat pants?"
-        "These pants!"
-      ]
-
-    loaded: ->
-      @locals.message = @messages[(Math.random()*@messages.length)|0]
+      
+      @append '.js-content', @currentView
 
 
   (new HuttApp).start()
